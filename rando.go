@@ -21,11 +21,11 @@ func formatName(name string) string {
 	return strings.Title(name) + " is"
 }
 
-// Suprise, Motherfucker! Sunrise, Motherfucker! Some Fries, Motherfucker!
+// you no fuck me; rando a fuck-ah you
 var youTryFuckMe = regexp.MustCompile(`(?i)tcam|tra(vis|cam)`)
 
 // Insult generates a simple insult of the form:
-// <Name> is|You are <Adv> <Adj> <Noun>.
+// (<Name> is|You are) a(n)? <Adv> <Adj> <Noun>.
 func Insult(n string) string {
 	name := formatName(n)
 	if youTryFuckMe.MatchString(name) {
@@ -59,7 +59,7 @@ func genDestroyer() string {
 
 	// fucking nazi's
 	nazi := "a"
-	if regexp.MustCompile("^(a|e|i|o|u)").MatchString(randyAdj) {
+	if regexp.MustCompile("^[aeiou]").MatchString(randyAdj) {
 		nazi = "an"
 	}
 
@@ -73,57 +73,48 @@ func genDestroyer() string {
 	)
 }
 
-// CN represents a codename instance
+// CN represents options that can be used
+// to configure a codename generator.
 type CN struct {
 	fword string
 	lword string
-
-	sep string
-
+	sep   string
 	clean bool
 }
 
-// Codename represents an Adj + Noun combo
-// like `SluttyBallsack`, for instance.
-func Codename() *CN {
+// NewCodenamer returns factory builder instance
+// used to genrate and configure codenames.
+func NewCodenamer() *CN {
 	return &CN{}
 }
 
-// Set specific word to be used as the first word
+// WithFirstWord sets the firstword to the word provided.
 func (cn *CN) WithFirstWord(fw string) *CN {
 	cn.fword = fw
 	return cn
 }
 
-// Set specific word to be used as the last word
+// WithLastWord sets the lastword to the word provided.
 func (cn *CN) WithLastWord(lw string) *CN {
 	cn.lword = lw
 	return cn
 }
 
-// If you don't want the words smushed together
-// this could probably help you.
+// WithSeperator lets you customize what, if anything, will seperate the parts
 func (cn *CN) WithSeperator(sep string) *CN {
 	cn.sep = sep
 	return cn
 }
 
-// Make sure the codename is as much of a lil pussy bitch as you are
+// WhatAPussy will make sure the codename is as much a lil bitch as you are
 func (cn *CN) WhatAPussy() *CN {
 	cn.clean = true
 	return cn
 }
 
-// Codename will actually be generated now that you've asked nicely.
+// Please just generate the fucking codename already.
 func (cn *CN) Please() string {
-	var s1, s2 string
-
-	switch {
-	case cn.clean:
-		s1, s2 = getCleanName()
-	default:
-		s1, s2 = getCodename()
-	}
+	s1, s2 := genCodename(cn.clean)
 
 	if cn.fword != "" {
 		s1 = cn.fword
@@ -142,20 +133,19 @@ func (cn *CN) Please() string {
 // returns a random codename combo. The noun is generally
 // the offensive part here and can be enhanced by any adj.
 // Thus, the adj's cleanliness shall be determined at random.
-func getCodename() (string, string) {
+func genCodename(isAPussy bool) (string, string) {
 	// aids helps clean-up overzealous nouns..
-	aids := regexp.MustCompile(`(piece of |sack of )`)
+	aids := regexp.MustCompile(`piece of |sack of |-)`)
+	n := aids.ReplaceAllString(randy(noun), "")
 
-	// (V) (°,,,,°) (V) - 50/50? ...Why not zoidberg!? (whoop. whoop. whooop.)
-	if randomInt(99)%2 == 0 {
-		return randy(adj), aids.ReplaceAllString(randy(noun), "")
+	// clean adj %50 of the time, everytime.
+	// unless, they are an admitted pussy
+	a := randy(adj)
+	if isAPussy || randomInt(99)%2 == 0 {
+		a = randy(cleanAdj)
 	}
-	return randy(cleanAdj), aids.ReplaceAllString(randy(noun), "")
-}
 
-// returns a random clean adj/noun combo
-func getCleanName() (string, string) {
-	return randy(cleanAdj), randy(cleanNoun)
+	return a, n
 }
 
 // -------------
@@ -168,8 +158,6 @@ func randomInt(n int) uint64 {
 	case n < 0:
 		n *= -1
 	}
-
 	num, _ := rand.Int(rand.Reader, big.NewInt(int64(n)))
-
 	return num.Uint64()
 }

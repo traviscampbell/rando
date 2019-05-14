@@ -21,32 +21,32 @@ Usage: rando COMMAND [target|opts...]
     Random Insult and Codename Generator
 
 Commands:
-  i, insult     Generate a simple insult
-  d, destroy    Generate an emotionally damaging insult
-  c, codename   Generate a codename
+  i, insult    Generate a simple insult
+  d, destroy   Generate an emotionally damaging insult
+  c, codename  Generate a codename
 
 Options for 'codename' only:
-  -fword=""	Set the first word of the codename
-  -lword=""	Set the last word of the codename
-  -sep=""	Set custom seperator between the 2 words of the codename
-  -imabitch	Ensure PC Prinpal would be on board with the generated name
+  -fword="" Set the first word of the codename
+  -lword="" Set the last word of the codename
+  -sep=""   Set custom seperator between the 2 words of the codename
+  -imabitch Ensure PC Prinpal/HR would be on board with the generated name
 
 Examples:
   rando insult "your mom"
   rando destroy rando
   rando codename -sep 💥
-  rando destroy | cowsay -f $(ls /usr/share/cows | shuf -n1) | lolcat --spread 0.69
+  rando destroy | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n1) | lolcat --spread 0.69
 `
 
 func main() {
 	// made flag for codename cause it's the only one with actual options
-	codenameCmd := flag.NewFlagSet("codename", flag.ExitOnError)
+	cnCmd := flag.NewFlagSet("codename", flag.ExitOnError)
 
-	fword := codenameCmd.String("fword", "", "set the first word of the codename")
-	lword := codenameCmd.String("lword", "", "set the last word of the codename")
-	sep := codenameCmd.String("sep", "", "custom seperator to use between the 2 words")
+	fword := cnCmd.String("fword", "", "set the first word of the codename")
+	lword := cnCmd.String("lword", "", "set the last word of the codename")
+	sep := cnCmd.String("sep", "", "custom seperator to use between the 2 words")
 	// make user admit they're a bitch to gen a pro safe-spaces codename
-	pussy := codenameCmd.Bool("imabitch", false, "ensure pc principal would be down with the generated name")
+	pussy := cnCmd.Bool("imabitch", false, "ensure pc principal would be down with the generated name")
 
 	// print help and exit if no command given
 	if len(os.Args) < 2 {
@@ -55,29 +55,23 @@ func main() {
 	}
 
 	switch os.Args[1] {
-	case "i":
-		fallthrough
-	case "insult":
+	case "i", "insult":
 		name := ""
 		if len(os.Args) >= 3 {
 			name = os.Args[2]
 		}
 		fmt.Println(rando.Insult(name))
 
-	case "d":
-		fallthrough
-	case "destroy":
+	case "d", "destroy":
 		name := ""
 		if len(os.Args) >= 3 {
 			name = os.Args[2]
 		}
 		fmt.Println(rando.Destroy(name))
 
-	case "c":
-		fallthrough
-	case "codename":
-		codenameCmd.Parse(os.Args[2:])
-		cn := rando.Codename()
+	case "c", "codename":
+		cnCmd.Parse(os.Args[2:])
+		cn := rando.NewCodenamer()
 		if *fword != "" {
 			cn.WithFirstWord(*fword)
 		}
@@ -93,7 +87,8 @@ func main() {
 		fmt.Println(cn.Please())
 
 	default:
-		fmt.Printf("\nCongratz, You %s! I guess fucking up is kinda like your thing, huh?\n\n", rando.Codename().WithSeperator(" ").Please())
+		fmt.Printf("\nCongratz, you %s!\n", rando.NewCodenamer().WithSeperator(" ").Please())
+		fmt.Printf("I guess fucking up is kinda like your thing, huh?\n\n")
 		os.Exit(1)
 	}
 }

@@ -11,7 +11,7 @@ func TestInsult(t *testing.T) {
 
 	// test no name provided
 	if got := Insult(""); !wantRE.MatchString(got) {
-		t.Errorf("Wanted insult to be prefixed with 'You are', bot got %s\n", got)
+		t.Errorf("Wanted insult to be prefixed with 'You are', but got %s\n", got)
 		t.Fail()
 	}
 
@@ -51,30 +51,30 @@ func TestDestroy(t *testing.T) {
 }
 
 func TestCodename(t *testing.T) {
-	if got := Codename().Please(); got == "" {
+	if got := NewCodenamer().Please(); got == "" {
 		t.Error("Wanted a codename, but didn't get shit.")
 		t.Fail()
 	}
 
-	if got := Codename().WhatAPussy().Please(); got == "" {
+	if got := NewCodenamer().WhatAPussy().Please(); got == "" {
 		t.Error("Wanted a wholesome codename, but don't even know what that is")
 		t.Fail()
 	}
 
 	// test codename with a fixed first word
-	if got := Codename().WithFirstWord("first").Please(); !strings.HasPrefix(got, "First") {
+	if got := NewCodenamer().WithFirstWord("first").Please(); !strings.HasPrefix(got, "First") {
 		t.Errorf("Got %s, but codename should have started with 'First'\n", got)
 		t.Fail()
 	}
 
 	// test codename with a fixed last word
-	if got := Codename().WithLastWord("last").Please(); !strings.HasSuffix(got, "Last") {
+	if got := NewCodenamer().WithLastWord("last").Please(); !strings.HasSuffix(got, "Last") {
 		t.Errorf("Got %s, but codename should have ended with 'Last'\n", got)
 		t.Fail()
 	}
 
 	// test codename with a space as the seperator between the words
-	if got := Codename().WithSeperator(" ").Please(); len(strings.Fields(got)) != 2 {
+	if got := NewCodenamer().WithSeperator(" ").Please(); len(strings.Fields(got)) != 2 {
 		t.Errorf("Got %s, but just want the fucking the adj and noun to have a space in da middle\n", got)
 		t.Fail()
 	}
