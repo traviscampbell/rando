@@ -1,27 +1,52 @@
 package rando
 
 var (
+	// negative-sounding adverbs beget intensity
 	adv = []string{
-		"a dreadfully",
-		"a filthy",
-		"a horribly",
-		"a preposterously",
-		"a ridiculously",
-		"a woefully",
-		"an absurdly",
-		"an indescribably",
-		"an inexcusably",
-		"an irredeemably",
-		"an offensively",
-		"an outrageously",
-		"an unholy",
+		"abnormally",
+		"absurdly",
+		"awkwardly",
+		"awfully",
+		"consitently",
+		"deeply",
+		"dreadfully",
+		"enourmously",
+		"extremely",
+		"filthy",
+		"hopelessly",
+		"horribly",
+		"incredibly",
+		"indescribably",
+		"inexcusably",
+		"insanely",
+		"irredeemably",
+		"offensively",
+		"outrageously",
+		"painfully",
+		"preposterously",
+		"ridiculously",
+		"seriously",
+		"really",
+		"righteously",
+		"terribly",
+		"tremendously",
+		"truly",
+		"unholy",
+		"unfortunately",
+		"utterly",
+		"wildly",
+		"woefully",
 	}
 
+	// incomplete list of qualities you embody
 	adj = []string{
+		"abysmal",
 		"annoying",
 		"appalling",
 		"asinine",
+		"arrogant",
 		"atrocious",
+		"belligerent",
 		"bitchass",
 		"bitter",
 		"cantankerous",
@@ -34,19 +59,26 @@ var (
 		"despicable",
 		"disgusting",
 		"dysfunctional",
+		"feckless",
+		"gross",
 		"grotesque",
 		"hermaphroditic",
+		"hideous",
 		"hopeless",
+		"horrendous",
 		"ignorant",
 		"illiterate",
 		"inbred",
 		"incompetent",
 		"inept",
+		"insidious",
 		"insignificant",
 		"insufferable",
 		"intolerable",
+		"intolerant",
 		"irresponsible",
 		"miserable",
+		"monsterous",
 		"mundane",
 		"naive",
 		"narcissistic",
@@ -54,30 +86,38 @@ var (
 		"nauseating",
 		"obnoxious",
 		"parasitic",
+		"pathetic",
+		"patronising",
 		"pedestrian",
 		"perverted",
 		"petty",
+		"plain",
 		"pompous",
+		"raging",
 		"reprehensible",
 		"repulsive",
+		"revolting",
 		"sinister",
 		"skanky",
 		"slutty",
+		"smug",
 		"spastic",
 		"superficial",
 		"syphilitic",
 		"toxic",
+		"ugly",
 		"uncivilized",
 		"unkempt",
+		"unwanted",
 		"vile",
+		"vindictive",
 		"worthless",
 	}
 
+	// incomplete list of things you are
 	noun = []string{
 		"ballsack",
-		"bastard",
 		"bitch",
-		"chicken-diddler",
 		"chode",
 		"chodemuffin",
 		"cockholster",
@@ -87,6 +127,7 @@ var (
 		"cumbubble",
 		"cumdumpster",
 		"cumjunkie",
+		"cunt",
 		"cuntpuddle",
 		"dickhead",
 		"dickhole",
@@ -109,16 +150,11 @@ var (
 		"lardass",
 		"meatflap",
 		"parasite",
-		"peasant",
-		"pervert",
-		"piece of shit",
-		"piece of garbage",
 		"pleb",
 		"prick",
 		"pussy",
 		"queef",
 		"retard",
-		"sack of shit",
 		"schlong",
 		"scrotum",
 		"shitbird",
@@ -139,15 +175,17 @@ var (
 		"whore",
 	}
 
-	desc = []string{
+	// compound adjectives that come to mind when thinking of you
+	compoundAdj = []string{
 		"alabama-hot-pocket-loving",
 		"bed-wetting",
 		"blue-waffle-loving",
 		"bug-eyed",
+		"chicken-diddling",
 		"chromosome-deficient",
-		"cockeyed",
+		"cock-eyed",
 		"cock-juggling",
-		"cocksucking",
+		"cock-sucking",
 		"corpse-fucking",
 		"cum-guzzling",
 		"dick-infested",
@@ -156,62 +194,86 @@ var (
 		"disease-ridden",
 		"drug-addled",
 		"enema-addicted",
-		"feebleminded",
+		"feeble-minded",
 		"finger-banging",
 		"fudge-packing",
 		"glass-bottom-boat-loving",
 		"horse-fucking",
 		"irredeemably-boring",
 		"kid-diddling",
+		"narrow-minded",
 		"orgasm-faking",
 		"pig-fucking",
 		"piss-drinking",
 		"poon-guzzling",
-		"raging",
 		"sheep-fucking",
 		"shit-eating",
 		"simple-minded",
 		"small-minded",
 		"soul-destroying",
+		"weak-willed",
 	}
 
+	// the story of your life
 	finisher = []string{
 		"cesspool of sub-human filth",
 		"evangelical crusader of sub-mediocrity",
-		"failure whose existence is meaningless and will be forgotten by everyone",
+		"failure whose existence is meaningless and will be utterly forgotten",
 		"molester of small furry animals",
 		"plotless melodrama of an uneventful life",
-		"poster child for birth control",
+		"poster-child for birth control",
 		"practitioner of nonconsentual bestiality",
-		"<noun> who should go play in traffic",
-		"<noun> whose a bigger disappointment than fucking Pluto",
+		"<noun> with delusions of adequacy",
+		"<noun> with the natural grace of a startled elephant",
+		"<noun> who has never had a conversation that didn't result in the other person just shaking their head in disappointment",
+		"<noun> who hasn't yet realized that people just tolerate you",
+		"<noun> who needs to accept that anyone who ever loved you was wrong",
+		"<noun> who reminds everyone a lot like Rapunzel except instead of letting down your hair you just let down everyone you ever came into contact with",
+		"<noun> who should go play in traffic or jump off a building",
+		"<noun> whose a bigger disappointment than fucking Pluto turned out to be",
 		"<noun> whose birth certificate is an apology from the condom factory",
 		"<noun> whose life will never amount to anything",
+		"<noun> whose like the bottom piece of bread — nobody touches you, and nobody wants you",
 		"<noun> whose mother should have swallowed",
-		"<noun> whose never had a conversation with anyone where the other person wasn't just shaking their head in disappointment",
-		"<noun> with delusions of adequacy",
-		"<noun> with the natural grace of a drunken panda suffering from vertigo",
 	}
 
 	youNoFuckMe = `What the fuck did you just fucking type about my homie, you little bitch?
 
-I’ll have you know I graduated top of my class at MIT, and I’ve been involved in numerous secret raids with Anonymous, and I have over 300 confirmed DDoSes.
-I am trained in online trolling and I’m the top hacker in the entire world. You are nothing to me but just another virus host.
-I will wipe you the fuck out, with precision the likes of which has never been seen before on the Internet. Mark my fucking words.
+I’ll have you know I graduated top of my class at MIT, and I’ve been involved
+in numerous secret raids with Anonymous, and I have over 300 confirmed DDoSes.
+I am trained in the art of online trolling and I’m the top hacker in the
+entire world.
 
-You think you can get away with typing that shit about my friend over the Internet? Think again, fucker.
+You are nothing to me but just another virus host.
 
-As we chat over IRC I am tracing your IP with my damn bare hands.
-So you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your computer.
+I will wipe you the fuck out, with precision the likes of which has never been
+seen before on the Internet. Mark my fucking words.
+
+You think you can get away with typing that shit about my friend over the
+Internet? Think again, fucker.
+
+As we chat over IRC I'm tracing your IP with my bare hands.
+So you better prepare for the storm, maggot. The storm that wipes out the
+pathetic little thing you call your computer.
+
 You’re fucking dead, kid.
 
-I can be anywhere, anytime, and I can hack into your files in over seven hundred ways, and that’s just with my bare hands.
-Not only am I extensively trained in hacking but I have access to the entire arsenal of every piece of malware ever created, and I will use it to its full extent to wipe your miserable ass off the face of the world wide web, you little shit.
+I can be anywhere, anytime, and hack into your files in over seven hundred ways,
+and that’s just with my bare hands.
 
-If only you could have known what unholy retribution your "clever" little comment was about to bring down upon you, maybe you would have held your fucking fingers.
-But you couldn’t, you didn’t, and now you’re paying the price, you goddamn idiot.
+Not only am I extensively trained in hacking but I have access to the entire
+arsenal of every piece of malware ever created, and I will use it to its
+fullest extent to wipe your miserable ass off the face of the world wide web,
+you little shit.
 
-I will shit code all over you and you will drown in it. You’re fucking dead, kiddo.`
+If only you could have known what unholy retribution your "clever" little
+comment was about to bring down upon you, maybe you would have held your
+fucking fingers. But you couldn’t, you didn’t, and now you’re paying the price,
+you goddamn idiot.
+
+I will shit code all over you and you will drown in it.
+
+You’re fucking dead, kiddo.`
 
 	cleanAdj = []string{
 		"angry",

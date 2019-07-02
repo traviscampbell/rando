@@ -4,14 +4,15 @@
 
 This project was initially started as a means to make our slackbot at work a bit more interesting. It's design was heavily influenced by the glorious [Better Off Ted](https://www.youtube.com/watch?v=Bh7Nz4bIwss) episode in which they develop an ingenious Insult Formula.
 
-It was quickly realized that there were many more useful applications for rando, such as:
+It was quickly realized that there were many more useful applications for `rando`, such as:
 
 - Making users feel bad about themselves when mistyping their passwords
 - Enhancing boring errors by humilating the function that caused the error
 - Populating DB values like addedby/createdby with funny offensive codenames
-- etc...
+- Piping generated insults into `espeak` or `say` when clients are nearby
+- Helping new hires develop tougher skin, and self-esteem issues, etc...
 
-It can be used as command-line tool or imported as a library in other projects. Some illustrative examples are provided down yonder...
+It can be used as command-line tool or imported as a library in other projects. Some example usuage is provided down yonder...
 
 ---
 
@@ -54,9 +55,10 @@ Rando is an absurdly dense shitstain, and a parasitic soul-destroying cesspool o
 
 __Codename Generation:__ `rando c, codename [opts]`
 
-You can use the `-fword` or `-lword` flag to specifically set the first or last word (thanks @jakewarren).
-The `-sep` flag can be used to set a custom seperator between the two words of the codename.
-Lastly, if you want name that's probably not offensive all you gotta do is admit that you are a little bitch with the `-imabitch` flag.
+- `-fword`: specifically set the first word of the codename (thanks @jakewarren)
+- `-lword`: specifically set the second word of the codename (thanks @jakewarren)
+- `-sep`: set a custom seperator between the codename words
+- `-imabitch`: just admit you are a little bitch and it'll give you a clean pc safe-space friendly name
 
 ```shell
 $> rando codename
@@ -81,7 +83,6 @@ package main
 
 import (
     "fmt"
-    "strconv"
 
     "github.com/traviscampbell/rando"
 ) 
@@ -92,33 +93,24 @@ func main() {
     fmt.Println(rando.Insult(""))
     fmt.Println(rando.Destoy(""))
 
-    // enhanced error example
-    if _, err := Swaffelen(); err != nil {
-        fmt.Println(err)
-    }
+    // may or may not destroy me ⊙▃⊙
+    fmt.Println(rando.Destroy("travis"))
 
-    // codename's can also make useful descriptions...
-    fmt.Println("I heard you're a straight up", rando.Codename().WithSeperator(" "))
-    fmt.Println("Wasn't sure at first, but now I can totally see that now!")
-}
-
-// Swaffelen - Dutch term for repeatedly hitting one's penis against
-// an object or another person's body, typically their face. ⊙▃⊙
-func Swaffelen() error {
-    if _, err := strconv.Atoi("𓂸"); err != nil {
-        // enhance error by shaming the Swaffelen function for its failure
-        return fmt.Errorf("[!] %s - %s", rando.Insult("Swaffelen"), err.Error())
-    }
-    return nil
+    // (ﾉ☉ヮ⚆)ﾉ ⌒*:･ﾟ✧ codenames
+    cn := rando.Codenamer()
+    fmt.Println(cn.Please())
+    fmt.Println(cn.WithSeperator("𓂸").Please())
 }
 ```
 
 ---
 
+### Bonus
+
 Keep your self-esteem in check by adding pretty self-affirmations to your `.bashrc` file:
 
 ```shell
-$> rando destroy | cowsay -f $(ls /usr/share/cows | shuf -n1) | lolcat --spread 0.69
+$> rando destroy | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n1) | lolcat --spread 0.69
 ```
 
 ![meanrainbowcow](img/meanRainbowCow.png)

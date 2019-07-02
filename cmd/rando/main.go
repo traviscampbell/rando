@@ -31,6 +31,10 @@ Options for 'codename' only:
   -sep=""   Set custom seperator between the 2 words of the codename
   -imabitch Ensure PC Prinpal/HR would be on board with the generated name
 
+Bonus Fuckery:
+  -easteregg="" RegExp rando will defend if any shade gets thrown at it [default: (?i)tcam|tra(vis|cam)]
+  -poach=false  Disable the protective easter-egg shield
+
 Examples:
   rando insult "your mom"
   rando destroy rando
@@ -38,39 +42,54 @@ Examples:
   rando destroy | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n1) | lolcat --spread 0.69
 `
 
+func printUsage() {
+	fmt.Println(usage)
+}
+
 func main() {
-	// made flag for codename cause it's the only one with actual options
-	cnCmd := flag.NewFlagSet("codename", flag.ExitOnError)
+	// flagset and subcommand flag pointers for insult/destroy commands
+	idfagset := flag.NewFlagSet("", flag.ExitOnError)
+	easterEgg := idfagset.String("easteregg", "", "regexp rando will defend if any shade gets thrown its way")
+	poachEgg := idfagset.Bool("poach", false, "disable the protective easter egg shield")
+	idfagset.Usage = printUsage
 
-	fword := cnCmd.String("fword", "", "set the first word of the codename")
-	lword := cnCmd.String("lword", "", "set the last word of the codename")
-	sep := cnCmd.String("sep", "", "custom seperator to use between the 2 words")
+	// flagset and subcommand flag pointers for codename command
+	cnfagset := flag.NewFlagSet("codename", flag.ExitOnError)
+	fword := cnfagset.String("fword", "", "set the first word of the codename")
+	lword := cnfagset.String("lword", "", "set the last word of the codename")
+	sep := cnfagset.String("sep", "", "custom seperator to use between the 2 words")
 	// make user admit they're a bitch to gen a pro safe-spaces codename
-	pussy := cnCmd.Bool("imabitch", false, "ensure pc principal would be down with the generated name")
+	pussy := cnfagset.Bool("imabitch", false, "ensure pc principal would be down with the generated name")
+	cnfagset.Usage = printUsage
 
-	// print help and exit if no command given
 	if len(os.Args) < 2 {
-		fmt.Println(usage)
+		printUsage()
 		os.Exit(0)
 	}
 
+	idfagset.Parse(os.Args[1:])
+	if len(*easterEgg) >= 1 {
+		rando.SetEasterEggRegexp(*easterEgg)
+	}
+	if *poachEgg {
+		rando.PoachEasterEgg()
+	}
+
+	name := ""
+	if len(os.Args) >= 3 {
+		name = os.Args[2]
+	}
+
 	switch os.Args[1] {
-	case "i", "insult":
-		name := ""
-		if len(os.Args) >= 3 {
-			name = os.Args[2]
-		}
+	case "i", "insult":	
 		fmt.Println(rando.Insult(name))
 
 	case "d", "destroy":
-		name := ""
-		if len(os.Args) >= 3 {
-			name = os.Args[2]
-		}
 		fmt.Println(rando.Destroy(name))
 
 	case "c", "codename":
-		cnCmd.Parse(os.Args[2:])
+		cnfagset.Parse(os.Args[2:])
+
 		cn := rando.NewCodenamer()
 		if *fword != "" {
 			cn.WithFirstWord(*fword)
@@ -84,11 +103,12 @@ func main() {
 		if *pussy {
 			cn.WhatAPussy()
 		}
+
 		fmt.Println(cn.Please())
 
 	default:
-		fmt.Printf("\nCongratz, you %s!\n", rando.NewCodenamer().WithSeperator(" ").Please())
-		fmt.Printf("I guess fucking up is kinda like your thing, huh?\n\n")
+		fmt.Printf("\nCongratz, you %s! You fucked up. Try again I suppose...\n\n", rando.NewCodenamer().WithSeperator(" ").Please())
+		fmt.Println(usage)
 		os.Exit(1)
 	}
 }
