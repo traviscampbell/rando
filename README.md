@@ -19,16 +19,15 @@ It can be used as command-line tool or imported as a library in other projects. 
 
 **Source**
 
-` > go install github.com/traviscampbell/rando/cmd/rando@latest`
+` » go install github.com/traviscampbell/rando/cmd/rando@latest`
 
 or if just wanting to include as a library
 
-` > get get -u github.com/traviscampbell/rando`
+` » get get -u github.com/traviscampbell/rando`
 
 **Binaries**
 
-It's possible there are prebuilt binaries under the [Releases section]((https://github.com/traviscampbell/rando/releases))
-<!-- [![Releases](https://img.shields.io/github/release/traviscampbell/rando.svg)](https://github.com/traviscampbell/rando/releases) -->
+[![Releases](https://img.shields.io/github/release/traviscampbell/rando.svg)](https://github.com/traviscampbell/rando/releases)
 
 ## Usage & Examples
 
