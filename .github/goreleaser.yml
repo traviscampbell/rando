@@ -1,0 +1,32 @@
+builds:
+  - id: "rando"
+    main: ./cmd/rando/main.go
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - '386'
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - '6'
+      - '7'
+archives:
+  - format: gz
+    files:
+      - none*
+    rlcp: true
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"

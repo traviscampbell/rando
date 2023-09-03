@@ -6,11 +6,12 @@ import (
 	"math/big"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 // randy string from given slice
 func randy(source []string) string {
-	return source[randomInt(len(source))]
+	return source[randomInt(len(source)-1)]
 }
 
 // randyWithArticle returns a random string from a slice
@@ -29,10 +30,18 @@ func normaleyes(name string) string {
 	if name == "" {
 		return "You are"
 	}
-	return strings.Title(name) + " is"
+
+	// with no mas titleCase and not wanting a 3rd party library this
+	// is what I resorted to incase some dilapidated dickhole wants
+	// multiple words title-cased. also, I don't want to talk about it...
+	llamo := ""
+	for _, word := range strings.Split(name, " ") {
+		llamo += string(unicode.ToUpper(rune(word[0]))) + word[1:] + " "
+	}
+	return llamo + "is"
 }
 
-// get a crypto random int between 0 and n
+// get a crypto random int between 0 and n (n is not inclusive. e.g.if n=100 it's between 0-99)
 func randomInt(n int) uint64 {
 	switch {
 	case n == 0:
@@ -50,7 +59,7 @@ func randomInt(n int) uint64 {
 // cause rando to stick-up for you and shit all over any egg heads
 // who thought they'd be cute and try to egg you on.
 type easterEgg struct {
-	nameRE *regexp.Regexp
+	nameRE  *regexp.Regexp
 	enabled bool
 }
 
@@ -72,7 +81,7 @@ func PoachEasterEgg() {
 // humpty is the default egg singleton preactivated to defend me because I'm
 // a little chicken who can dish it out, but(t)? fuck taking it... ⊙▂⊙
 var humpty = easterEgg{
-	nameRE: regexp.MustCompile(`(?i)tcam|tra(vis|cam)`),
+	nameRE:  regexp.MustCompile(`(?i)tcam|tra(vis|cam)`),
 	enabled: true,
 }
 
@@ -134,18 +143,25 @@ func youTryFuckMe(n string) bool {
 // Insult generates a simple insult of the form:
 // (<Name> is|You are) a(n)? <Adv> <Adj> <Noun>.
 func Insult(name string) string {
+	if accidentlyCompliment() {
+		name = normaleyes(name)
+		return fmt.Sprintf("%s %s!", name, genCompliment(name))
+	}
+
 	if youTryFuckMe(name) {
 		return youNoFuckMe
 	}
+
 	return normaleyes(name) + genInsult() + "."
 }
 
 func genInsult() string {
+	noun := strings.Replace(randy(noun), "-", "", -1)
 	return fmt.Sprintf(
 		" %s %s %s",
 		randyWithArticle(adv),
 		randy(adj),
-		randy(noun),
+		strings.ToLower(noun),
 	)
 }
 
@@ -153,6 +169,11 @@ func genInsult() string {
 // devestating compound insult in the form:
 // <Insult>, and a(n) <Adj> <CompoundAdj> <Noun> <Finisher>.
 func Destroy(name string) string {
+	if accidentlyCompliment() {
+		name = normaleyes(name)
+		return name + genCompliment(name) + "!"
+	}
+
 	if youTryFuckMe(name) {
 		return youNoFuckMe
 	}
@@ -173,73 +194,98 @@ func genDestroyer(name string) string {
 
 // to help make some of the finishers more personal a bit
 // of extra effort is needed to get the grammar right.
+// honestly, I suck at grammar but know a thing or two about
+// shit-arounds so bear witness to some those below.:)
 func genFin(name string) string {
 	fin := randy(finisher)
 
 	// handful need an xtra noun thrown in..
-	fin = strings.Replace(fin, "<noun>", randy(noun), -1)
+	noun := strings.Replace(randy(noun), "-", "", -1)
+	noun = strings.ToLower(noun)
+	fin = strings.Replace(fin, "<noun>", noun, -1)
 
-	// finishers by default use personal pronouns 
+	// finishers by default use personal pronouns
 	// so we can leave early if it's personal
 	if strings.HasPrefix(name, "You ") {
-		return fin
-	}
-
-	// if it's not the epic rapunzel finsisher we just
-	// need to make sure the pronoun in an oject pronoun
-	if !strings.Contains(fin, "Rapunzel") {
-		return strings.Replace(fin, "you", "them", -1)
+		return strings.NewReplacer(
+			"<they>", "",
+			"<them>", "",
+			"<their>", "",
+			"<", "",
+			">", "",
+		).Replace(fin)
 	}
 
 	// get proper fucked with subject+possive pronouns
-	fin = strings.Replace(fin, "your", "their", -1)
-	return strings.Replace(fin, "you", "they", -1)
+	return strings.NewReplacer(
+		"<your>", "",
+		"<you>", "",
+		"<", "",
+		">", "",
+	).Replace(fin)
 }
 
 // ----------------------------------------------------------------------
 
-// CN represents options that can be used
-// to configure a codename generator.
+// CN represents codename and the various
+// options that can be applied.
 type CN struct {
-	fword string
-	lword string
-	sep   string
-	clean bool
+	fword     string
+	lword     string
+	sep       string
+	caps      bool
+	clean     bool
+	halfClean bool
 }
 
-// NewCodenamer returns factory builder instance
+// NewCodename returns default pre-configured instance
 // used to genrate and configure codenames.
-func NewCodenamer() *CN {
+func NewCodename() *CN {
 	return &CN{sep: "", clean: false}
 }
 
-// WithFirstWord sets the firstword to the word provided.
-func (cn *CN) WithFirstWord(fw string) *CN {
+// WithFWord sets the firstword to the word provided.
+func (cn *CN) WithFWord(fw string) *CN {
 	cn.fword = fw
 	return cn
 }
 
-// WithLastWord sets the lastword to the word provided.
-func (cn *CN) WithLastWord(lw string) *CN {
+// WithLWord sets the lastword to the word provided.
+func (cn *CN) WithLWord(lw string) *CN {
 	cn.lword = lw
 	return cn
 }
 
-// WithSeperator lets you customize what, if anything, will seperate the parts
-func (cn *CN) WithSeperator(sep string) *CN {
+// WithSep lets you customize what, if anything, will seperate the parts
+func (cn *CN) WithSep(sep string) *CN {
 	cn.sep = sep
 	return cn
 }
 
-// WhatAPussy will make sure the codename is as much a lil bitch as you are
-func (cn *CN) WhatAPussy() *CN {
+// Pussify will make sure ensure the space is kept safe
+func (cn *CN) Pussify() *CN {
 	cn.clean = true
 	return cn
 }
 
-// Please just generate the fucking codename already.
-func (cn *CN) Please() string {
-	s1, s2 := genCodename(cn.clean)
+// WithCAPS will return the codename in all caps
+func (cn *CN) WithCAPS() *CN {
+	cn.caps = true
+	return cn
+}
+
+// HalfClean will pull a random adjective from the clean list but keep
+// the noun filthy. It has it's moments...
+func (cn *CN) HalfClean() *CN {
+	cn.halfClean = true
+	return cn
+}
+
+// Generate the fucking codename already.
+func (cn *CN) Generate() string {
+	s1, s2 := cn.generate()
+	// shit around for some words because I like them camelCased more
+	s2 = strings.Replace(s2, "-", "", -1)
 
 	if cn.fword != "" {
 		s1 = cn.fword
@@ -249,29 +295,82 @@ func (cn *CN) Please() string {
 		s2 = cn.lword
 	}
 
-	s1 = strings.Title(s1)
-	s2 = strings.Title(s2)
+	switch {
+	case cn.caps:
+		s1 = strings.ToUpper(s1)
+		s2 = strings.ToUpper(s2)
+
+	default:
+		// still don't want to talk about it
+		s1 = string(unicode.ToUpper(rune(s1[0]))) + s1[1:]
+		s2 = string(unicode.ToUpper(rune(s2[0]))) + s2[1:]
+	}
 
 	return s1 + cn.sep + s2
 }
 
 // returns a random codename combo. The noun is generally
-// the offensive part here and can be enhanced by any adj.
-// Thus, the adj's cleanliness shall be determined at random
-// unless the user has admitted they are pussy.
-func genCodename(isAPussy bool) (string, string) {
-	if isAPussy {
+// the offensive part here and can be enhanced by any adjective.
+// Thus, the adj's cleanliness shall be determined at random unless the
+// user admitted they're a pussy which will protect their safe-spaces.
+func (cn *CN) generate() (string, string) {
+	if cn.clean {
 		return randy(cleanAdj), randy(cleanNoun)
 	}
 
-	var (
-		a = randy(adj)
-		n = randy(noun)
-	)
+	switch {
+	case cn.clean:
+		return randy(cleanAdj), randy(cleanNoun)
 
-	if randomInt(2) == 1 {
-		return randy(cleanAdj), n
+	case cn.halfClean:
+		return randy(cleanAdj), randy(noun)
+
+	default:
+		return randy(adj), randy(noun)
+	}
+}
+
+// ----------------------------------------------------------------------
+
+// there's a 25% chance of a 50% chance of a 75% chance of a 1% chance
+// that rando will fuck-up and accidently compliment someone...
+// I've not seen it happen but hey, it could happen...
+func accidentlyCompliment() bool {
+	if randomInt(100) < 99 {
+		return false
 	}
 
-	return a, n
+	if randomInt(100) < 75 {
+		return false
+	}
+
+	if randomInt(100) < 50 {
+		return false
+	}
+
+	if randomInt(100) < 25 {
+		return false
+	}
+
+	return true
+}
+
+// (ㅅ´ ˘ `)♡ ☜(꒡⌓꒡)
+func genCompliment(name string) string {
+	if strings.HasPrefix(name, "You ") {
+		return strings.NewReplacer(
+			"<they>", "",
+			"<them>", "",
+			"<their>", "",
+			"<", "",
+			">", "",
+		).Replace((randy(compliment)))
+	}
+
+	return strings.NewReplacer(
+		"<your>", "",
+		"<you>", "",
+		"<", "",
+		">", "",
+	).Replace(randy(compliment))
 }
