@@ -1,28 +1,25 @@
 package rando
 
 import (
-	"regexp"
 	"strings"
 	"testing"
 	"unicode"
 )
 
 func TestInsult(t *testing.T) {
-	wantRE := regexp.MustCompile(`^(?:You are|Rando is)[\w\s]+\.$`)
-
 	// test no name provided
-	if got := Insult(""); !wantRE.MatchString(got) {
-		t.Errorf("Wanted insult to be prefixed with 'You are', but got %s\n", got)
+	if got := Insult(""); !strings.HasPrefix(got, "You are") {
+		t.Errorf("Wanted to insult 'You', but instead got: %s\n", got)
 		t.Fail()
 	}
 
 	// test with a name
-	if got := Insult("rando"); !wantRE.MatchString(got) {
-		t.Errorf("Wanted insult to start with 'Rando', but got %s\n", got)
+	if got := Insult("rando"); !strings.HasPrefix(got, "Rando is") {
+		t.Errorf("Wanted to insult 'Rando', but instead got: %s\n", got)
 		t.Fail()
 	}
 
-	// test some dickhead trying to get fresh with me
+	// test some dickhead making one of the biggest mistakes of their pathetic lives
 	if got := Insult("travis"); got != youNoFuckMe {
 		t.Errorf("Wanted rando to have my back, but instead %s\n", got)
 		t.Fail()
@@ -30,23 +27,21 @@ func TestInsult(t *testing.T) {
 }
 
 func TestDestroy(t *testing.T) {
-	wantRE := regexp.MustCompile(`^(?:You are|Rando is).*?\.$`)
-
 	// test no name provided
-	if got := Destroy(""); !wantRE.MatchString(got) {
-		t.Errorf("Wanted destroy to be prefixed with 'You are', bot got %s\n", got)
+	if got := Destroy(""); !strings.HasPrefix(got, "You are") {
+		t.Errorf("Wanted destroy 'You', but instead got: %s\n", got)
 		t.Fail()
 	}
 
 	// test with a name
-	if got := Destroy("rando"); !wantRE.MatchString(got) {
-		t.Errorf("Wanted destroy to start with 'Rando', but got %s\n", got)
+	if got := Destroy("rando"); !strings.HasPrefix(got, "Rando is") {
+		t.Errorf("Wanted to destroy 'Rando', but instead got: %s\n", got)
 		t.Fail()
 	}
 
-	// test some dickhead trying to fresh with me
+	// test some dickhead making one of the biggest mistakes of their pathetic lives
 	if got := Destroy("travis"); got != youNoFuckMe {
-		t.Errorf("Wanted rando to have my back, but instead %s\n", got)
+		t.Errorf("Wanted rando to have my back, but instead: %s\n", got)
 		t.Fail()
 	}
 }
@@ -57,6 +52,7 @@ func TestCodename(t *testing.T) {
 		t.Fail()
 	}
 
+	// test codename for pussies
 	if got := NewCodename().Pussify().Generate(); got == "" {
 		t.Error("Wanted a wholesome codename, but don't even know what that is")
 		t.Fail()
@@ -82,7 +78,7 @@ func TestCodename(t *testing.T) {
 
 	// test codename with all CAPS
 	if got := NewCodename().WithCAPS().Generate(); !checkUP(got) {
-		t.Errorf("GOT %s, BUTT WANTED ALL FUCKING CAPS!!!!", got)
+		t.Errorf("GOT %s, BUTT NEEDED ALL FUCKING CAPS!!!!", got)
 		t.Fail()
 	}
 
