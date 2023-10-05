@@ -19,11 +19,15 @@ It can be used as command-line tool or imported as a library in other projects. 
 
 **Source**
 
-` » go install github.com/traviscampbell/rando/cmd/rando@latest`
+```shell
+» go install github.com/traviscampbell/rando/cmd/rando@latest
+```
 
 or if just wanting to include as a library
 
-` » get get -u github.com/traviscampbell/rando`
+```
+ » get get -u github.com/traviscampbell/rando
+```
 
 **Binaries**
 
@@ -136,6 +140,6 @@ Keep your self-esteem in check by adding gentle self-affirmations to your `~/.ba
 ![meanrainbowcow](img/bonus.png)
 
 
-### (V) (°,,,,°) (V) why not buy me a coffee?
+### (V) (°,,,,°) (V) why not give a shit?
 
-<a href="https://www.buymeacoffee.com/traviscampbell" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+<a href="https://www.buymeacoffee.com/traviscampbell" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Give A Shit" height="41" width="174"></a>
