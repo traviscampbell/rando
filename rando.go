@@ -68,7 +68,8 @@ func (e *easterEgg) protectMe(n string) bool {
 }
 
 // SetEasterEggRegexp lets you override the regexp val to help
-// protect yourself from getting beaten, cracked, or fried
+// protect yourself from getting boiled, beaten, whisked, cracked
+// deviled, scrambled, steamed, pickled, poached, baked, or even fried.
 func SetEasterEggRegexp(reStr string) {
 	humpty.nameRE = regexp.MustCompile(reStr)
 }
@@ -78,8 +79,8 @@ func PoachEasterEgg() {
 	humpty.enabled = false
 }
 
-// humpty is the default egg singleton preactivated to defend me because I'm
-// a little chicken who can dish it out, but(t)? fuck taking it... ⊙▂⊙
+// humpty is the default easter-egg preloaded to defend me because I'm
+// a little chicken who can dish it out, but can't take it... ⊙▂⊙
 var humpty = easterEgg{
 	nameRE:  regexp.MustCompile(`(?i)tcam|tra(vis|cam)`),
 	enabled: true,
@@ -156,18 +157,17 @@ func Insult(name string) string {
 }
 
 func genInsult() string {
-	noun := strings.Replace(randy(noun), "-", "", -1)
 	return fmt.Sprintf(
 		" %s %s %s",
 		randyWithArticle(adv),
 		randy(adj),
-		strings.ToLower(noun),
+		strings.ToLower(randy(noun)),
 	)
 }
 
 // Destroy them on an emotional level with a
 // devestating compound insult in the form:
-// <Insult>, and a(n) <Adj> <CompoundAdj> <Noun> <Finisher>.
+// <Insult> and a(n)? <Adj> <CompoundAdj> <Noun> <Finisher>.
 func Destroy(name string) string {
 	if accidentlyCompliment() {
 		name = normaleyes(name)
@@ -199,9 +199,9 @@ func genDestroyer(name string) string {
 func genFin(name string) string {
 	fin := randy(finisher)
 
+	noun := strings.ToLower(randy(noun))
+
 	// handful need an xtra noun thrown in..
-	noun := strings.Replace(randy(noun), "-", "", -1)
-	noun = strings.ToLower(noun)
 	fin = strings.Replace(fin, "<noun>", noun, -1)
 
 	// finishers by default use personal pronouns
@@ -284,7 +284,8 @@ func (cn *CN) HalfClean() *CN {
 // Generate the fucking codename already.
 func (cn *CN) Generate() string {
 	s1, s2 := cn.generate()
-	// shit around for some words because I like them camelCased more
+	// shit-around for some words because I like them camelCased more
+	// when they are used in the context of a codename.
 	s2 = strings.Replace(s2, "-", "", -1)
 
 	if cn.fword != "" {
@@ -311,8 +312,9 @@ func (cn *CN) Generate() string {
 
 // returns a random codename combo. The noun is generally
 // the offensive part here and can be enhanced by any adjective.
-// Thus, the adj's cleanliness shall be determined at random unless the
-// user admitted they're a pussy which will protect their safe-spaces.
+// If the 'clean' opt is set both adj and noun will be clean(-ish).
+// If the 'halfClean' opt is set the adj will at least be from clean list.
+// When used properly, the whole shebang should be fairly<->thoroughly offensive.
 func (cn *CN) generate() (string, string) {
 	if cn.clean {
 		return randy(cleanAdj), randy(cleanNoun)
@@ -334,7 +336,8 @@ func (cn *CN) generate() (string, string) {
 
 // there's a 25% chance of a 50% chance of a 75% chance of a 1% chance
 // that rando will fuck-up and accidently compliment someone...
-// I've not seen it happen but hey, it could happen...
+// I've not seen it happen in practice, but ultimately accidents do happen.
+// I mean just look at you.
 func accidentlyCompliment() bool {
 	if randomInt(100) < 99 {
 		return false
